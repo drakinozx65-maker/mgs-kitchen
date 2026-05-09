@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MGS калькулятор кухни</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M18.5 15l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h4.2l2 2h6.8A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9z"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V5a2 2 0 0 1 2-2z"/><path d="M7 3v6h9M7 21v-8h10v8"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h8M8 9h2"/></symbol>
+    <symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l5 3V9l5 3V5h4v16"/><path d="M9 17h1M13 17h1M17 17h1"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 16h10l1-16M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2L12 3z"/><path d="M12 9v5M12 17h.01"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 3v18h-7"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 10.6A3 3 0 0 0 12 15a3 3 0 0 0 2.4-1.2"/><path d="M9.9 5.2A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.1 3.1"/><path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 7 10 7a10.8 10.8 0 0 0 4.2-.9"/></symbol>
+  </svg>
+
+  <iframe id="printFrame" title="print-frame"></iframe>
+
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <div class="brand-icon"><svg class="icon logo"><use href="#i-logo"></use></svg></div>
+      <h2>Вход менеджера</h2>
+      <p>Выберите имя и введите PIN. Это нужно для журнала и истории изменений.</p>
+      <label>Менеджер<select id="loginUser"></select></label>
+      <label>PIN<input id="loginPin" type="password" inputmode="numeric" placeholder="Введите PIN" /></label>
+      <button class="primary" id="loginBtn">Войти</button>
+      <div class="auth-error" id="loginError"></div>
+    </div>
+  </div>
+
+  <div class="app">
+    <header class="topbar" id="top">
+      <div class="brand">
+        <div class="brand-icon"><svg class="icon logo"><use href="#i-logo"></use></svg></div>
+        <div>
+          <div class="eyebrow">MGS Kitchen Calculator</div>
+          <h1 id="projectTitleTop">Пошаговый расчет кухни</h1>
+          <div class="save-line"><span id="saveState">Готов к работе</span> <button id="logoutBtn" class="logout-btn"><svg class="icon tiny"><use href="#i-logout"></use></svg>Выйти</button></div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-card"><span>Шаг</span><b id="stepCounter">1/10</b></div>
+        <div class="summary-total">
+          <span>Предварительная сумма</span>
+          <b id="totalTop">0 ₽</b>
+          <small id="totalSub">Ошибки 0 · Уточнить 0</small>
+        </div>
+        <button class="primary" id="saveProjectBtn"><svg class="icon"><use href="#i-save"></use></svg>Сохранить</button>
+      </div>
+    </header>
+
+    <div class="layout" id="layout">
+      <aside class="journal open" id="journal">
+        <button class="journal-toggle" id="journalToggle">‹</button>
+        <div class="journal-content">
+          <div class="journal-head">
+            <h2><svg class="icon"><use href="#i-folder"></use></svg>Журнал</h2>
+            <button class="round" id="newProjectBtn"><svg class="icon no-margin"><use href="#i-plus"></use></svg></button>
+          </div>
+          <div class="server-status" id="serverStatus">Проверка сохранения…</div>
+          <div class="search"><svg class="icon small"><use href="#i-search"></use></svg><input id="projectSearch" placeholder="Поиск проекта" /></div>
+          <div class="filter-grid">
+            <select id="statusFilter"></select>
+            <select id="managerFilter"></select>
+          </div>
+          <div id="projectsList" class="projects-list"></div>
+        </div>
+        <div class="journal-closed">Журнал</div>
+      </aside>
+
+      <main>
+        <section class="card order-card">
+          <div class="section-title">
+            <h2>Данные заказа</h2>
+            <p>Обязательные данные для сохранения, печатных форм и заявки</p>
+          </div>
+          <div class="grid four">
+            <label>Заказ №<input id="orderNumber" /></label>
+            <label>Дата<input id="orderDate" type="date" /></label>
+            <label>Заказчик<input id="customer" /></label>
+            <label>Телефон<input id="phone" placeholder="+7 (999) 999-99-99" /></label>
+            <label>Менеджер<input id="manager" readonly /></label>
+            <label>Срок сдачи<input id="deadline" type="date" /></label>
+            <label>Статус<select id="status"></select></label>
+            <label>Тип изделия<select id="productType"></select></label>
+            <label class="wide">Основной номер заказа фабрики, если дозаказ<input id="factoryBaseOrder" /></label>
+            <label>Наценка шаги 2–6, %<input id="markupGoods" placeholder="Например 35" /></label>
+            <label>Наценка шаги 7–9, %<input id="markupServices" placeholder="Например 25" /></label>
+
+          </div>
+          <div class="hint-box"><svg class="icon small"><use href="#i-info"></use></svg>Если это дозаказ — обязательно укажите основной номер заказа фабрики. Возможны отличия по тону материалов.</div>
+        </section>
+
+        <div class="workarea">
+          <nav class="steps" id="stepsNav"></nav>
+
+          <section class="step-card card">
+            <div class="section-title">
+              <h2 id="stepTitle">Шаг</h2>
+              <p id="stepHint">Подсказка</p>
+            </div>
+
+            <div id="stepContent"></div>
+
+            <div class="step-actions">
+              <button class="light-btn" id="prevStepBtn">Назад</button>
+              <button class="primary" id="nextStepBtn">Дальше</button>
+            </div>
+          </section>
+
+          <aside class="right-panel">
+            <div class="sticky-panel">
+              <div class="mini-total">
+                <span>Предварительная сумма</span>
+                <b id="sideTotal">0 ₽</b>
+              </div>
+              <div class="check-block">
+                <h3>Проверка</h3>
+                <div id="validationList"></div>
+              </div>
+              <div class="actions vertical">
+                <button class="primary" id="saveProjectBtn2"><svg class="icon"><use href="#i-save"></use></svg>Сохранить</button>
+                <button class="dark-btn" id="clientPdfBtn"><svg class="icon"><use href="#i-file"></use></svg>PDF для клиента</button>
+                <button class="light-btn" id="factoryPdfBtn"><svg class="icon"><use href="#i-factory"></use></svg>Бланк фабрики</button>
+                <button class="light-btn" id="sendRequestBtn">Отправить на просчет</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <section class="card">
+          <div class="section-title">
+            <h2>Эскиз / документы</h2>
+            <p>При наличии техники, стекла, врезной подсветки и нестандартных элементов прикладывайте схемы</p>
+          </div>
+          <div class="sketch-grid">
+            <label class="upload">
+              <svg class="icon upload-svg"><use href="#i-file"></use></svg>
+              <b>Загрузить эскиз или схему</b>
+              <small>PNG, JPG, WEBP или PDF</small>
+              <input id="sketchInput" type="file" accept="image/*,.pdf" />
+            </label>
+            <div class="sketch-preview" id="sketchPreview">Предпросмотр появится здесь</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-title history-title-row">
+            <div>
+              <h2>История изменений</h2>
+              <p>Кто и когда редактировал проект</p>
+            </div>
+            <button class="light-btn" id="toggleHistoryBtn" type="button">Показать историю</button>
+          </div>
+          <div id="historyList" class="history-list hidden"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <button class="eye-toggle" id="toggleWholesaleEye" title="Скрыть опт и наценку"><svg class="icon eye-svg"><use href="#i-eye"></use></svg></button>
+  <button class="to-top" id="toTop"><svg class="icon up-svg"><use href="#i-up"></use></svg></button>
+  <script src="app.js"></script>
+  <div id="statusStickerOverlay" class="status-sticker-overlay"></div>
+</body>
+</html>
